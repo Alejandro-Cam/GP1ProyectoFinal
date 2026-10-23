@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SocioData {
 
@@ -40,8 +42,8 @@ public class SocioData {
             ResultSet rs = ps.getGeneratedKeys();
 
             if (rs.next()) {
-                s.setIdSocios(rs.getInt(1));
-                JOptionPane.showMessageDialog(null, "Socio guardado con éxito. ID: " + s.getIdSocios());
+                s.setIdSocio(rs.getInt(1));
+                JOptionPane.showMessageDialog(null, "Socio guardado con éxito. ID: " + s.getIdSocio());
             }
 
             ps.close();
@@ -50,5 +52,37 @@ public class SocioData {
             System.out.println("Error al insertar socio: " + ex.getMessage());
         }
     }
+
+    //SELECT listar socios activos
+    public List<Socio> listarSocio() {
+        List<Socio> socios = new ArrayList<>();
+        String sql = "SELECT * FROM socios WHERE estado = 1";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Socio s = new Socio(
+                        rs.getInt("id_Socio"),
+                        rs.getString("dni"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getInt("edad"),
+                        rs.getString("correo"),
+                        rs.getString("telefono"),
+                        rs.getBoolean("estado")
+                );
+                socios.add(s);
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al listar socios: " + ex.getMessage());
+        }
+        return socios;
+    }
+    
+    //CONSULTA, busqueda por dni
+    
 
 }

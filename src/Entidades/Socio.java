@@ -2,7 +2,7 @@ package Entidades;
 
 public class Socio {
     //atributos
-    private int idSocios;
+    private int idSocio;
     private String dni;
     private String nombre;
     private String apellido;
@@ -12,8 +12,8 @@ public class Socio {
     private boolean estado;
     
     //constructor completo
-    public Socio(int idSocios, String dni, String nombre, String apellido, int edad, String correo, String telefono, boolean estado) {
-        this.idSocios = idSocios;
+    public Socio(int idSocio, String dni, String nombre, String apellido, int edad, String correo, String telefono, boolean estado) {
+        this.idSocio = idSocio;
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -38,11 +38,11 @@ public class Socio {
     public Socio() {};
     
     //getter and setter
-    public int getIdSocios() {
-        return idSocios;
+    public int getIdSocio() {
+        return idSocio;
     }
-    public void setIdSocios(int idSocios) {
-        this.idSocios = idSocios;
+    public void setIdSocio(int idSocio) {
+        this.idSocio = idSocio;
     }
     public String getDni() {
         return dni;
@@ -90,6 +90,6 @@ public class Socio {
     //toString 
     @Override
     public String toString(){
-        return "ID: " + idSocios + "APELLIDO: " + apellido + " NOMBRE: " + nombre;
+        return "ID: " + idSocio + " APELLIDO: " + apellido + " NOMBRE: " + nombre;
     }
 }
