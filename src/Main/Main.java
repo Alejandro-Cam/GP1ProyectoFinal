@@ -1,6 +1,8 @@
 package Main;
 
+import Entidades.Entrenador;
 import Entidades.Socio;
+import Persistencia.EntrenadorData;
 import Persistencia.SocioData;
 import java.util.List;
 
@@ -9,9 +11,9 @@ public class Main {
     public static void main(String[] args) {
         
         SocioData socioData = new SocioData();
-        
-        Socio s = new Socio("34.000.000", "Alejandro", "Camargo", 30, "alejandro@ulp.com", "2664101010", true);
         /*
+        Socio s = new Socio("34.000.000", "Alejandro", "Camargo", 30, "alejandro@ulp.com", "2664101010", true);
+        
         //guardamos socio
         socioData.guardarSocio(s);
         System.out.println("Socio Guardado con exito " + s.toString());
@@ -35,8 +37,18 @@ public class Main {
         
         //baja logica
         socioData.bajaLogica(2);
-        */
+        
         //alta logica
         socioData.altaLogica(2);
+        */
+        
+        //----------------------ENTRENADOR-------------------------------
+        Entrenador e = new Entrenador("10.000.000", "Claudio", "Gallo", "Musculacion", true);
+        
+        EntrenadorData entrenadorData = new EntrenadorData();
+        
+        //guardar entrenador
+        entrenadorData.guardarEntrenador(e);
+        
     }
 }
