@@ -15,7 +15,7 @@ public class Main {
         //guardamos socio
         socioData.guardarSocio(s);
         System.out.println("Socio Guardado con exito " + s.toString());
-        */
+        
         //listar socios
         System.out.println("-------------------LISTA DE SOCIOS---------------------");
         List<Socio> lista = socioData.listarSocio();
@@ -23,9 +23,20 @@ public class Main {
             System.out.println(socio.toString());
         }
         
+        //buscar por DNI
+        System.out.println("--------------BUSCAR POR DNI-------------");
+        Socio a = socioData.buscarSocioPorDni("34.000.000");
+        System.out.println("socio : " + s.getNombre());
         
+        //modificar socio
+        a.setCorreo("correoActualizado@ulp.com");
+        socioData.modificarSocio(a);
+        System.out.println("socio actualizado: " + a.toString());
         
-        
-        
+        //baja logica
+        socioData.bajaLogica(2);
+        */
+        //alta logica
+        socioData.altaLogica(2);
     }
 }
