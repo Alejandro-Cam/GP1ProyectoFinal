@@ -36,10 +36,10 @@ public class Main {
         System.out.println("socio actualizado: " + a.toString());
         
         //baja logica
-        socioData.bajaLogica(2);
+        socioData.bajaSocio(2);
         
         //alta logica
-        socioData.altaLogica(2);
+        socioData.altaSocio(2);
         */
         
         //----------------------ENTRENADOR-------------------------------
@@ -48,7 +48,16 @@ public class Main {
         EntrenadorData entrenadorData = new EntrenadorData();
         
         //guardar entrenador
-        entrenadorData.guardarEntrenador(e);
+//        entrenadorData.guardarEntrenador(e);
         
+        //buscar por id
+//        Entrenador en = entrenadorData.buscarPorId(3);
+//        System.out.println("Buscado: " + en.getApellido() + en.getDni());
+        
+        //Modificar 
+//        en.setApellido("Berg");
+//        entrenadorData.modificarEntrenador(en);
+//        System.out.println("Modificado: " + en.toString());
+
     }
 }

@@ -143,7 +143,7 @@ public class SocioData {
     }
 
     //BAJA LOGICA, UPDATE estado = 0
-    public void bajaLogica(int id) {
+    public void bajaSocio(int id) {
         String sql = "UPDATE socios SET Estado = 0 WHERE ID_Socio = ?";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -159,7 +159,7 @@ public class SocioData {
     }
 
     //ALTA LOGICA
-    public void altaLogica(int id) {
+    public void altaSocio(int id) {
         String sql = "UPDATE socios SET Estado = 1 WHERE ID_Socio = ?";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
