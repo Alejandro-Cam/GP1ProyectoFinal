@@ -73,7 +73,7 @@ public class Entrenador {
     @Override
     public String toString() {
         return "ID: " + idEntrenador +
-                "Nombre: " + nombre + 
-                "Apellido: " + apellido;
+                " | Nombre: " + nombre + 
+                " | Apellido: " + apellido;
     }
 }

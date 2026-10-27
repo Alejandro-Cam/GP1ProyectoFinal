@@ -1,7 +1,9 @@
 package Main;
 
+import Entidades.Clase;
 import Entidades.Entrenador;
 import Entidades.Socio;
+import Persistencia.ClaseData;
 import Persistencia.EntrenadorData;
 import Persistencia.SocioData;
 import java.util.List;
@@ -9,9 +11,11 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        
         SocioData socioData = new SocioData();
+        ClaseData claseData = new ClaseData();
+        EntrenadorData entrenadorData = new EntrenadorData();
         /*
+        
         Socio s = new Socio("34.000.000", "Alejandro", "Camargo", 30, "alejandro@ulp.com", "2664101010", true);
         
         //guardamos socio
@@ -40,12 +44,12 @@ public class Main {
         
         //alta logica
         socioData.altaSocio(2);
-        */
+        
         
         //----------------------ENTRENADOR-------------------------------
         Entrenador e = new Entrenador("10.000.000", "Claudio", "Gallo", "Musculacion", true);
         
-        EntrenadorData entrenadorData = new EntrenadorData();
+        
         
         //guardar entrenador
 //        entrenadorData.guardarEntrenador(e);
@@ -58,6 +62,20 @@ public class Main {
 //        en.setApellido("Berg");
 //        entrenadorData.modificarEntrenador(en);
 //        System.out.println("Modificado: " + en.toString());
+         */
 
+        //--------------------------CLASE-----------------------------------
+        //busco un entrenador en la base de batos
+        
+        //guardar clase
+        Entrenador profe = entrenadorData.buscarPorId(2);
+        Clase c = new Clase("Yoga", profe, java.time.LocalTime.of(18, 0),30 , true);
+//        claseData.guardarClase(c);
+        
+        //buscar clase por id
+        Clase cl = claseData.buscarClasePorId(4);
+        System.out.println("buscada: " + cl.toString());
+        
+        
     }
 }

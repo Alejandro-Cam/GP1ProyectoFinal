@@ -37,6 +37,7 @@ public class EntrenadorData {
             ResultSet rs = ps.getGeneratedKeys();
 
             if (rs.next()) {
+                e.setIdEntrenador(rs.getInt(1));
                 JOptionPane.showMessageDialog(null, "Entrenador guardado con éxito. ID: " + e.getIdEntrenador());
             }
             ps.close();
@@ -141,7 +142,7 @@ public class EntrenadorData {
     }
     
     //Alta logica
-    public void AltaEntrenador(int id) {
+    public void altaEntrenador(int id) {
         String sql = "UPDATE entrenadores SET Estado = 1 WHERE ID_Entrenador = ?";
 
         try {
