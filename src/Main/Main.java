@@ -76,6 +76,17 @@ public class Main {
         Clase cl = claseData.buscarClasePorId(4);
         System.out.println("buscada: " + cl.toString());
         
+        //Listar clases
+        List<Clase> clases = claseData.listarClases();
+        for (Clase clase : clases) {
+            System.out.println(clase.toString());
+        }
+        
+        //Modificar clases
+//        c.setCapacidad(25);   
+//        claseData.modificarClase(c);
+        
+        
         
     }
 }
