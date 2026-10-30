@@ -62,7 +62,7 @@ public class Main {
 //        en.setApellido("Berg");
 //        entrenadorData.modificarEntrenador(en);
 //        System.out.println("Modificado: " + en.toString());
-         */
+         
 
         //--------------------------CLASE-----------------------------------
         //busco un entrenador en la base de batos
@@ -89,6 +89,8 @@ public class Main {
         //Modificar clases
 //        c.setCapacidad(25);   
 //        claseData.modificarClase(c);
+        */
+        //----------------------------PASE-----------------------------
         
         
         
