@@ -68,10 +68,14 @@ public class Main {
         //busco un entrenador en la base de batos
         
         //guardar clase
-        Entrenador profe = entrenadorData.buscarPorId(2);
+        Entrenador profe = entrenadorData.buscarPorId(3);
         Clase c = new Clase("Yoga", profe, java.time.LocalTime.of(18, 0),30 , true);
 //        claseData.guardarClase(c);
         
+        Clase c2 = new Clase("Yoga 2", profe, java.time.LocalTime.of(17, 0),30 , true);
+        claseData.guardarClase(c2);
+
+
         //buscar clase por id
         Clase cl = claseData.buscarClasePorId(4);
         System.out.println("buscada: " + cl.toString());

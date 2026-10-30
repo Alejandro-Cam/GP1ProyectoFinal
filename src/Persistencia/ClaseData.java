@@ -51,7 +51,62 @@ public class ClaseData {
 
         //el entrenador tenga el id ingresado valido
         if (c.getEntrenador().getIdEntrenador() <= 0) {
-            JOptionPane.showMessageDialog(null,"El entrenador seleccionado no es válido.");
+            JOptionPane.showMessageDialog(null, "El entrenador seleccionado no es válido.");
+            return false;
+        }
+
+        //validar horario
+        if (c.getHorario() == null) {
+            JOptionPane.showMessageDialog(null,"Debe ingresar un horario.");
+            return false;
+        }
+        Entrenador entrenadorActivo = entrenadorData.buscarPorId(
+                c.getEntrenador().getIdEntrenador()
+        );
+        if (entrenadorActivo == null) {
+            JOptionPane.showMessageDialog(null, "El entrenador no existe o está inactivo.");
+            return false;
+        }
+
+        return true;
+    }
+
+    //VALIDAR EL HORARIO DEL ENTRENADOR
+    private boolean validarHorarioEntrenador(Clase c, boolean modificacion) {
+
+        String sql = "SELECT COUNT(*) FROM clases WHERE ID_Entrenador = ? AND Horario = ? AND Estado = 1";
+
+        //evita que se bloquee la clase en la BD cuando la modifico 
+        if (modificacion) {
+            sql += " AND ID_Clase <> ?";
+        }
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            ps.setInt(1, c.getEntrenador().getIdEntrenador());
+            ps.setTime(2, Time.valueOf(c.getHorario()));
+
+            if (modificacion) {
+                ps.setInt(3, c.getIdClase());
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int cantidad = rs.getInt(1);
+
+                if (cantidad > 0) {
+                    JOptionPane.showMessageDialog(null, "El entrenador ya tiene una clase en ese horario.");
+                    return false;
+                }
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al validar el horario: " + ex.getMessage());
             return false;
         }
 
@@ -60,9 +115,15 @@ public class ClaseData {
 
     //GUARDAR CLASE
     public void guardarClase(Clase c) {
-        //valido la clase con mi metodo 
-        
-        
+        //valido la clase con mi metodo
+        if (!validarClase(c)) {
+            return;
+        }
+        //valido el horario del entrenador
+        if (!validarHorarioEntrenador(c, false)) { //es false porque no quiero modificar la clase
+            return;
+        }
+
         String sql = "INSERT INTO clases (Disciplina, ID_Entrenador, Horario, Capacidad, Estado) VALUES (?, ?, ?, ?, ?)";
 
         try {
@@ -153,6 +214,20 @@ public class ClaseData {
 
     //MODIFICAR clase
     public void modificarClase(Clase c) {
+        //validar id correcto
+        if (c.getIdClase() <= 0) {
+            JOptionPane.showMessageDialog(null, "El ID de la clase es invalido");
+            return;
+        }
+
+        //validaciones generales
+        if (!validarClase(c)) {
+            return;
+        }
+        //validar horario
+        if (!validarHorarioEntrenador(c, true)) { //true porque modifico la clse
+            return;
+        }
         String sql = "UPDATE clases SET Disciplina = ?, ID_Entrenador = ?, Horario = ?, Capacidad = ?, Estado = ? WHERE ID_Clase = ?";
 
         try {
@@ -192,4 +267,21 @@ public class ClaseData {
         }
     }
 
+    //ALTA CLASE
+    public void altaClase(int id) {
+        String sql = "UPDATE clases SET Estado = 1 WHERE ID_Clase = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, id);
+            int filas = ps.executeUpdate();
+
+            if (filas > 0) {
+                JOptionPane.showMessageDialog(null, "Clase dada de alta correctamente.");
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al dar de alta la clase: " + ex.getMessage());
+        }
+    }
 }
