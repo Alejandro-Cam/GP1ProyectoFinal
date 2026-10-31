@@ -22,8 +22,53 @@ public class PaseData {
         socioData = new SocioData();
     }
 
+    //VALIDACIONES
+    private boolean validarPase(Pase p) {
+        //pase que no sea null
+        if (p == null) {
+            JOptionPane.showMessageDialog(null, "El pase no debe ser nulo");
+            return false;
+        }
+
+        //socio no null
+        if (p.getSocio() == null) {
+            JOptionPane.showMessageDialog(null, "El socio no debe ser nulo");
+            return false;
+        }
+
+        //cantidad de entradas mayores que cero
+        if (p.getCantidadEntradas() <= 0) {
+            JOptionPane.showMessageDialog(null, "El numero de entradas debe ser mayor que cero");
+            return false;
+        }
+
+        //fecha no null
+        if (p.getFechaInicio() == null) {
+            JOptionPane.showMessageDialog(null, "la fecha no debe ser nula");
+            return false;
+        }
+
+        if (p.getCosto() < 0) {
+            JOptionPane.showMessageDialog(null, "El costo debe ser mayor a cero");
+            return false;
+        }
+
+        //fecha de fin correcta
+        if (!p.getFechaInicio().plusDays(30).equals(p.getFechaFin())) {
+            JOptionPane.showMessageDialog(null, "La fecha de fin es incorrecta");
+            return false;
+        }
+
+        return true;
+    }
+
     //GUARDAR
     public void guardarPase(Pase p) {
+        //VALIDACIONES
+        if(!validarPase(p)) {
+            return;
+        }
+        
         String sql = "INSERT INTO pases (ID_Socio, CantidadEntradas, Fecha_Inicio, Fecha_Fin, Costo, Estado) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
