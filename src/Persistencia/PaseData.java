@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -33,6 +34,13 @@ public class PaseData {
         //socio no null
         if (p.getSocio() == null) {
             JOptionPane.showMessageDialog(null, "El socio no debe ser nulo");
+            return false;
+        }
+
+        Socio socioEncontrado = socioData.buscarSocioPorId(p.getSocio().getIdSocio());
+
+        if (socioEncontrado == null) {
+            JOptionPane.showMessageDialog(null, "El socio no existe o está inactivo");
             return false;
         }
 
@@ -65,10 +73,10 @@ public class PaseData {
     //GUARDAR
     public void guardarPase(Pase p) {
         //VALIDACIONES
-        if(!validarPase(p)) {
+        if (!validarPase(p)) {
             return;
         }
-        
+
         String sql = "INSERT INTO pases (ID_Socio, CantidadEntradas, Fecha_Inicio, Fecha_Fin, Costo, Estado) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -109,7 +117,7 @@ public class PaseData {
 
                 // Recuperar el socio titular del pase
                 int idSocio = rs.getInt("ID_Socio");
-                Socio socio = buscarSocioPorIdAux(idSocio);
+                Socio socio = socioData.buscarSocioPorId(idSocio);
                 p.setSocio(socio);
 
                 p.setCantidadEntradas(rs.getInt("CantidadEntradas"));
@@ -139,7 +147,7 @@ public class PaseData {
                 p = new Pase();
                 p.setIdPase(rs.getInt("ID_Pase"));
 
-                Socio socio = buscarSocioPorIdAux(idSocio);
+                Socio socio = socioData.buscarSocioPorId(idSocio);
                 p.setSocio(socio);
 
                 p.setCantidadEntradas(rs.getInt("CantidadEntradas"));
@@ -153,6 +161,71 @@ public class PaseData {
             JOptionPane.showMessageDialog(null, "Error al consultar el pase activo: " + ex.getMessage());
         }
         return p;
+    }
+
+    //LISTAR PASES
+    public List<Pase> listarPases() {
+        List<Pase> lista = new ArrayList<>();
+        String sql = "SELECT * FROM pases WHERE Estado = 1";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Pase p = new Pase();
+                p.setIdPase(rs.getInt("ID_Pase"));
+
+                // Recuperar el socio titular del pase
+                int idSocio = rs.getInt("ID_Socio");
+                Socio socio = socioData.buscarSocioPorId(idSocio);
+                p.setSocio(socio);
+
+                p.setCantidadEntradas(rs.getInt("CantidadEntradas"));
+                p.setFechaInicio(rs.getDate("Fecha_Inicio").toLocalDate());
+                p.setFechaFin(rs.getDate("Fecha_Fin").toLocalDate());
+                p.setCosto(rs.getDouble("Costo"));
+                p.setEstado(rs.getBoolean("Estado"));
+                lista.add(p);
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al listar los pases: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+    //MODIFICAR PASE
+    public void modificarPase(Pase p) {
+        //validaciones
+        if (!validarPase(p)) {
+            return;
+        }
+        if (p.getIdPase() <= 0) {
+            JOptionPane.showMessageDialog(null, "El ID del pase no es válido");
+            return;
+        }
+        
+        String sql = "UPDATE pases SET ID_Socio = ?, CantidadEntradas = ?, Fecha_Inicio = ?, Fecha_Fin = ?, Costo = ?, Estado = ? WHERE ID_Pase = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, p.getSocio().getIdSocio());
+            ps.setInt(2, p.getCantidadEntradas());
+            ps.setDate(3, Date.valueOf(p.getFechaInicio()));
+            ps.setDate(4, Date.valueOf(p.getFechaFin()));
+            ps.setDouble(5, p.getCosto());
+            ps.setBoolean(6, p.isEstado());
+            ps.setInt(7, p.getIdPase());
+            //comprobar cambios
+            int filas = ps.executeUpdate();
+            if (filas > 0) {
+                JOptionPane.showMessageDialog(null, "Pase modificado exitosamente.");
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al modificar la pase: " + ex.getMessage());
+        }
     }
 
     //DESCONTAR 1 ENTRADA AL PASE
@@ -184,17 +257,6 @@ public class PaseData {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al dar de baja el pase: " + ex.getMessage());
         }
-    }
-
-    // Método auxiliar para obtener objeto Socio por su ID
-    private Socio buscarSocioPorIdAux(int idSocio) {
-        List<Socio> lista = socioData.listarSocio();
-        for (Socio s : lista) {
-            if (s.getIdSocio() == idSocio) {
-                return s;
-            }
-        }
-        return null;
     }
 
     public void altaPase(int id) {

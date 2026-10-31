@@ -142,6 +142,35 @@ public class SocioData {
         }
     }
 
+    //Buscar socio por id 
+    public Socio buscarSocioPorId(int id) {
+        Socio s = null;
+        String sql = "SELECT * FROM socios WHERE ID_Socio = ? AND Estado = 1";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                s = new Socio();
+                s.setIdSocio(rs.getInt("ID_Socio"));
+                s.setDni(rs.getString("DNI"));
+                s.setNombre(rs.getString("Nombre"));
+                s.setApellido(rs.getString("Apellido"));
+                s.setEdad(rs.getInt("Edad"));
+                s.setCorreo(rs.getString("Correo"));
+                s.setTelefono(rs.getString("Telefono"));
+                s.setEstado(rs.getBoolean("Estado"));
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al buscar Socio " + ex.getMessage());
+        }
+        return s;
+    }
+
     //BAJA LOGICA, UPDATE estado = 0
     public void bajaSocio(int id) {
         String sql = "UPDATE socios SET Estado = 0 WHERE ID_Socio = ?";
