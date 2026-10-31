@@ -1,9 +1,11 @@
 package Main;
 
+import Entidades.Asistencia;
 import Entidades.Clase;
 import Entidades.Entrenador;
 import Entidades.Pase;
 import Entidades.Socio;
+import Persistencia.AsistenciaData;
 import Persistencia.ClaseData;
 import Persistencia.EntrenadorData;
 import Persistencia.PaseData;
@@ -17,10 +19,7 @@ public class Main {
         ClaseData claseData = new ClaseData();
         EntrenadorData entrenadorData = new EntrenadorData();
         PaseData paseData = new PaseData();
-        
-        
-        
-        
+
         /*
         
         Socio s = new Socio("34.000.000", "Alejandro", "Camargo", 30, "alejandro@ulp.com", "2664101010", true);
@@ -96,7 +95,7 @@ public class Main {
         //Modificar clases
 //        c.setCapacidad(25);   
 //        claseData.modificarClase(c);
-        */
+        
         //----------------------------PASE-----------------------------
         Socio so = socioData.buscarSocioPorDni("34.000.000");
         Pase p = new Pase(so, 30, java.time.LocalDate.of(15, 10, 26), java.time.LocalDate.of(25, 8, 26), 25.50, true);
@@ -107,6 +106,12 @@ public class Main {
         
 //        paseData.bajaPase(2);
 //        paseData.altaPase(2);
+         */
+        //-----------------------------------ASISTENCIA------------------------------
+        
+        
+        
+        
         
         
     }
