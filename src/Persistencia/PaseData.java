@@ -48,7 +48,7 @@ public class PaseData {
         }
     }
 
-    // 2. BUSCAR PASE POR ID
+    //BUSCAR PASE POR ID
     public Pase buscarPasePorId(int id) {
         Pase p = null;
         String sql = "SELECT * FROM pases WHERE ID_Pase = ? AND Estado = 1";
@@ -80,7 +80,7 @@ public class PaseData {
         return p;
     }
 
-    // 3. OBTENER PASE ACTIVO VIGENTE DE UN SOCIO
+    //OBTENER PASE ACTIVO VIGENTE DE UN SOCIO
     public Pase obtenerPaseActivoPorSocio(int idSocio) {
         Pase p = null;
         String sql = "SELECT * FROM pases WHERE ID_Socio = ? AND Estado = 1 AND Fecha_Fin >= CURDATE() AND CantidadEntradas > 0 ORDER BY ID_Pase DESC LIMIT 1";
@@ -110,7 +110,7 @@ public class PaseData {
         return p;
     }
 
-    // 4. DESCONTAR 1 ENTRADA AL PASE
+    //DESCONTAR 1 ENTRADA AL PASE
     public void descontarEntrada(int idPase) {
         String sql = "UPDATE pases SET CantidadEntradas = CantidadEntradas - 1 WHERE ID_Pase = ? AND CantidadEntradas > 0";
 
@@ -124,7 +124,7 @@ public class PaseData {
         }
     }
 
-    // 5. BAJA LÓGICA
+    //BAJA LÓGICA
     public void bajaPase(int id) {
         String sql = "UPDATE pases SET Estado = 0 WHERE ID_Pase = ?";
 
@@ -152,4 +152,19 @@ public class PaseData {
         return null;
     }
 
+    public void altaPase(int id) {
+        String sql = "UPDATE pases SET Estado = 1 WHERE ID_Pase = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, id);
+            int filas = ps.executeUpdate();
+            if (filas > 0) {
+                JOptionPane.showMessageDialog(null, "Pase dado de alta correctamente.");
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al dar de alta el pase: " + ex.getMessage());
+        }
+    }
 }
