@@ -10,6 +10,7 @@ import Persistencia.ClaseData;
 import Persistencia.EntrenadorData;
 import Persistencia.PaseData;
 import Persistencia.SocioData;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
@@ -19,6 +20,7 @@ public class Main {
         ClaseData claseData = new ClaseData();
         EntrenadorData entrenadorData = new EntrenadorData();
         PaseData paseData = new PaseData();
+        AsistenciaData asistenciaData = new AsistenciaData();
 
         /*
         
@@ -108,11 +110,23 @@ public class Main {
 //        paseData.altaPase(2);
          */
         //-----------------------------------ASISTENCIA------------------------------
+        Socio s = socioData.buscarSocioPorDni("34.000.000");
+        
+        Clase c = claseData.buscarClasePorId(6);
+        Pase p = paseData.buscarPasePorId(2);
+        
+        Asistencia a = new Asistencia(s, c, null, LocalDate.now());
+        
+//        asistenciaData.registrarAsistencia(a);
+        
+//        List<Asistencia> lista1 = asistenciaData.listarAsistencia();
+//        for (Asistencia asis : lista1) {
+//            System.out.println(asis);
+//        }
         
         
-        
-        
-        
+        Asistencia as = asistenciaData.buscarAsistenciaPorId(1);
+        System.out.println(as);
         
     }
 }

@@ -205,7 +205,7 @@ public class PaseData {
             JOptionPane.showMessageDialog(null, "El ID del pase no es válido");
             return;
         }
-        
+
         String sql = "UPDATE pases SET ID_Socio = ?, CantidadEntradas = ?, Fecha_Inicio = ?, Fecha_Fin = ?, Costo = ?, Estado = ? WHERE ID_Pase = ?";
 
         try {
@@ -225,6 +225,24 @@ public class PaseData {
             ps.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al modificar la pase: " + ex.getMessage());
+        }
+    }
+
+    //METODO DESCONTAR usa en asistenciaData
+    public boolean descontarEntrada(Connection conexion, int idPase)
+            throws SQLException {
+
+        String sql = "UPDATE pases "
+                + "SET CantidadEntradas = CantidadEntradas - 1 "
+                + "WHERE ID_Pase = ? "
+                + "AND CantidadEntradas > 0 "
+                + "AND Estado = 1";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, idPase);
+
+            return ps.executeUpdate() > 0;
         }
     }
 
