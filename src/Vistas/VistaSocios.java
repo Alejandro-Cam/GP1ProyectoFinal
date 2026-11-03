@@ -188,9 +188,7 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         //Limpio filas anteriores
         modelo.setRowCount(0);
 
-        SocioData socioData1 = new SocioData();
-
-        List<Socio> lista = socioData1.listarSocio();
+        List<Socio> lista = socioData.listarSocio();
 
         for (Socio s : lista) {
 
@@ -240,7 +238,6 @@ public class VistaSocios extends javax.swing.JInternalFrame {
 
         //limpio los campos del formulario
         limpiarFormulario();
-
     }
 
     @SuppressWarnings("unchecked")
@@ -373,6 +370,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnModificar.setForeground(java.awt.Color.white);
         btnModificar.setText("Modificar");
         btnModificar.setFocusPainted(false);
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnDarDeBaja.setBackground(new java.awt.Color(120, 16, 26));
         btnDarDeBaja.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
@@ -518,6 +520,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         jTable1.setRowHeight(28);
         jTable1.setSelectionBackground(new java.awt.Color(40, 120, 200));
         jTable1.setSelectionForeground(java.awt.Color.white);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout pnlPanelLayout = new javax.swing.GroupLayout(pnlPanel);
@@ -600,6 +607,14 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         }
         guardarSocio();
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
