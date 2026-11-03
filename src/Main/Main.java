@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
-
+/*
     public static void main(String[] args) {
         SocioData socioData = new SocioData();
         ClaseData claseData = new ClaseData();
@@ -22,7 +22,7 @@ public class Main {
         PaseData paseData = new PaseData();
         AsistenciaData asistenciaData = new AsistenciaData();
 
-        /*
+        
         
         Socio s = new Socio("34.000.000", "Alejandro", "Camargo", 30, "alejandro@ulp.com", "2664101010", true);
         
@@ -108,7 +108,7 @@ public class Main {
         
 //        paseData.bajaPase(2);
 //        paseData.altaPase(2);
-         */
+         
         //-----------------------------------ASISTENCIA------------------------------
         Socio s = socioData.buscarSocioPorDni("34.000.000");
         
@@ -129,4 +129,5 @@ public class Main {
         System.out.println(as);
         
     }
+*/
 }
