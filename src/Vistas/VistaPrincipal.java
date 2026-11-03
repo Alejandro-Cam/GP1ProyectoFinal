@@ -35,11 +35,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 928, Short.MAX_VALUE)
+            .addGap(0, 957, Short.MAX_VALUE)
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 711, Short.MAX_VALUE)
+            .addGap(0, 742, Short.MAX_VALUE)
         );
 
         jMenuBar1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -49,6 +49,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         jmiSocios.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiSocios.setText("Socios");
+        jmiSocios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiSociosActionPerformed(evt);
+            }
+        });
         jmAdministracion.add(jmiSocios);
 
         jmiEntrenadores.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -131,6 +136,17 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void jmiInformeAsistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiInformeAsistenciasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jmiInformeAsistenciasActionPerformed
+
+    private void jmiSociosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiSociosActionPerformed
+        escritorio.removeAll(); //Limpia las ventanas
+        escritorio.repaint(); //redibuja el escritorio
+        
+        VistaSocios vs = new VistaSocios();
+        vs.setVisible(true); //hace visible la ventana
+        
+        escritorio.add(vs);
+        escritorio.moveToFront(vs); //lleva al frenta la ventana
+    }//GEN-LAST:event_jmiSociosActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
