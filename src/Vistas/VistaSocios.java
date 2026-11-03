@@ -1,15 +1,27 @@
 package Vistas;
 
+import Entidades.Socio;
+import Persistencia.SocioData;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 public class VistaSocios extends javax.swing.JInternalFrame {
+
+    //conexiona socioData
+    private SocioData socioData;
+    private Socio socio;
 
     public VistaSocios() {
         initComponents();
-        
+
         configurarTabla();
+        socioData = new SocioData();
+        cargarTabla();
+
     }
 
     private void configurarTabla() {
-
         jTable1.getTableHeader().setBackground(
                 new java.awt.Color(40, 167, 69)
         );
@@ -25,6 +37,209 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         jTable1.getTableHeader().setPreferredSize(
                 new java.awt.Dimension(0, 32)
         );
+    }
+
+    //  validaciones de los campos 
+    private boolean validarFormulario() {
+        String dni = txtDni.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String correo = txtCorreoElectronico.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+
+        //VALIDAR DNI
+        if (dni.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el numero de DNI");
+            txtDni.requestFocus();
+            return false;
+        } else {
+            if (!dni.matches("[0-9]+")) {
+                if (!dni.contains(".")) {
+                    JOptionPane.showMessageDialog(this, "Ingrese el DNI sin puntos.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El DNI solo debe contener números.");
+                }
+                txtDni.selectAll();
+                txtDni.requestFocus();
+                return false;
+            } else {
+                if (dni.length() < 7 || dni.length() > 8) {
+                    JOptionPane.showMessageDialog(this, "El DNI debe contener entre 7 y 8 números.");
+                    txtDni.selectAll();
+                    txtDni.requestFocus();
+                    return false;
+                }
+            }
+        }
+
+        //VALIDAR NOMBRE
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
+            txtNombre.requestFocus();
+            return false;
+        } else {
+            //Validar longitud mínima
+            if (nombre.length() < 2) {
+                JOptionPane.showMessageDialog(this, "El nombre debe tener al menos 2 letras.");
+                txtNombre.selectAll();
+                txtNombre.requestFocus();
+                return false;
+            } else {
+                //Validar solo letras, acentos y espacios (excluye números y símbolos)
+                if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+                    // Anidado para dar un mensaje específico si metió números
+                    if (nombre.matches(".*\\d.*")) {
+                        JOptionPane.showMessageDialog(this, "El nombre no puede contener números.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El nombre no puede contener símbolos ni caracteres especiales.");
+                    }
+                    txtNombre.selectAll();
+                    txtNombre.requestFocus();
+                    return false;
+                }
+            }
+        }
+        //VALIDAR APELLIDO
+        if (apellido.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El apellido no puede estar vacío.");
+            txtApellido.requestFocus();
+            return false;
+        } else {
+            //Validar longitud mínima
+            if (apellido.length() < 2) {
+                JOptionPane.showMessageDialog(this, "El apellido debe tener al menos 2 letras.");
+                txtApellido.selectAll();
+                txtApellido.requestFocus();
+                return false;
+            } else {
+                //Validar solo letras, acentos y espacios (excluye números y símbolos)
+                if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+                    // Anidado para dar un mensaje específico si metió números
+                    if (apellido.matches(".*\\d.*")) {
+                        JOptionPane.showMessageDialog(this, "El apellido no puede contener números.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El apellido no puede contener símbolos ni caracteres especiales.");
+                    }
+                    txtApellido.selectAll();
+                    txtApellido.requestFocus();
+                    return false;
+                }
+            }
+        }
+
+        //VALIDAR CORREO ELECTRONICO
+        if (correo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El correo electrónico no puede estar vacío.");
+            txtCorreoElectronico.requestFocus();
+            return false;
+        } else {
+            // Validar formato general de email (usuario@dominio.ext)
+            if (!correo.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                // Anidado para identificar el error exacto del usuario
+                if (correo.contains(" ")) {
+                    JOptionPane.showMessageDialog(this, "El correo electrónico no puede contener espacios.");
+                } else if (!correo.contains("@")) {
+                    JOptionPane.showMessageDialog(this, "El correo electrónico debe incluir un '@'.");
+                } else if (!correo.contains(".")) {
+                    JOptionPane.showMessageDialog(this, "El correo electrónico debe tener un dominio válido (ej: .com).");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El formato del correo no es válido (ejemplo: socio@email.com).");
+                }
+                txtCorreoElectronico.selectAll();
+                txtCorreoElectronico.requestFocus();
+                return false;
+            }
+        }
+
+        //VALIDACION TELEFONO 
+        if (telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El teléfono no puede estar vacío.");
+            txtTelefono.requestFocus();
+            return false;
+        } else {
+            //Validar que solo contenga números y caracteres permitidos
+            if (!telefono.matches("^[0-9+\\-\\s()]+$")) {
+                if (telefono.matches(".*[a-zA-ZáéíóúÁÉÍÓÚñÑ].*")) {
+                    JOptionPane.showMessageDialog(this, "El teléfono no puede contener letras.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El teléfono contiene caracteres no válidos (solo se permiten números, +, -, () y espacios).");
+                }
+                txtTelefono.selectAll();
+                txtTelefono.requestFocus();
+                return false;
+            } else {
+                //Contar solo los dígitos numéricos reales ignorando símbolos de formato
+                String soloNumeros = telefono.replaceAll("[^0-9]", "");
+
+                if (soloNumeros.length() < 8 || soloNumeros.length() > 15) {
+                    JOptionPane.showMessageDialog(this, "El teléfono debe tener entre 8 y 15 dígitos.");
+                    txtTelefono.selectAll();
+                    txtTelefono.requestFocus();
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //METODO PARA CARGAR SOCIOS EN LA TABLA
+    private void cargarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        //Limpio filas anteriores
+        modelo.setRowCount(0);
+
+        SocioData socioData1 = new SocioData();
+
+        List<Socio> lista = socioData1.listarSocio();
+
+        for (Socio s : lista) {
+
+            modelo.addRow(new Object[]{
+                s.getDni(), s.getNombre(), s.getApellido(),
+                s.getEdad(), s.getTelefono(), s.getCorreo()
+            });
+        }
+    }
+
+    //Metodo para botono nuevo
+    private void limpiarFormulario() {
+        txtDni.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtCorreoElectronico.setText("");
+        txtTelefono.setText("");
+        spnEdad.setValue(1);
+
+        socio = null;
+    }
+
+    private void guardarSocio() {
+        //datos del formulario
+        String dni = txtDni.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        int edad = (int) spnEdad.getValue();
+        String correo = txtCorreoElectronico.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+
+        //creo objeto socio
+        Socio s = new Socio();
+        s.setDni(dni);
+        s.setNombre(nombre);
+        s.setApellido(apellido);
+        s.setEdad(edad);
+        s.setCorreo(correo);
+        s.setTelefono(telefono);
+        s.setEstado(true);
+
+        //guardo en BD
+        socioData.guardarSocio(s);
+
+        //actualizo la tabla para que aparezca el socio cargado
+        cargarTabla();
+
+        //limpio los campos del formulario
+        limpiarFormulario();
 
     }
 
@@ -50,7 +265,6 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnGuardar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnDarDeBaja = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
         spnEdad = new javax.swing.JSpinner();
         pnlPanel = new javax.swing.JPanel();
         lblTitulo3 = new javax.swing.JLabel();
@@ -115,6 +329,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnNuevo.setForeground(java.awt.Color.white);
         btnNuevo.setText("Nuevo");
         btnNuevo.setFocusPainted(false);
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         lblEdad.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblEdad.setForeground(new java.awt.Color(255, 255, 255));
@@ -143,6 +362,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnGuardar.setForeground(java.awt.Color.white);
         btnGuardar.setText("Guardar");
         btnGuardar.setFocusPainted(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setBackground(new java.awt.Color(0, 65, 134));
         btnModificar.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -158,16 +382,6 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDarDeBajaActionPerformed(evt);
-            }
-        });
-
-        btnLimpiar.setBackground(new java.awt.Color(204, 204, 204));
-        btnLimpiar.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        btnLimpiar.setText("Limpiar");
-        btnLimpiar.setFocusPainted(false);
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
             }
         });
 
@@ -192,18 +406,13 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                             .addComponent(lblTitulo2)
                             .addComponent(lblTitulo)
                             .addGroup(pnlFormularioLayout.createSequentialGroup()
-                                .addComponent(btnNuevo)
-                                .addGap(39, 39, 39)
+                                .addGap(14, 14, 14)
                                 .addComponent(btnGuardar)
-                                .addGap(38, 38, 38)
+                                .addGap(50, 50, 50)
                                 .addComponent(btnModificar)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDarDeBaja)))
                 .addGroup(pnlFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlFormularioLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(btnDarDeBaja)
-                        .addGap(41, 41, 41)
-                        .addComponent(btnLimpiar))
                     .addGroup(pnlFormularioLayout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(pnlFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -212,7 +421,10 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                             .addComponent(lblTelefono)
                             .addComponent(txtApellido)
                             .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
-                            .addComponent(spnEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(spnEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlFormularioLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(btnNuevo)))
                 .addGap(15, 15, 15))
         );
         pnlFormularioLayout.setVerticalGroup(
@@ -251,8 +463,7 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
                     .addComponent(btnModificar)
-                    .addComponent(btnDarDeBaja)
-                    .addComponent(btnLimpiar))
+                    .addComponent(btnDarDeBaja))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -323,7 +534,7 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                         .addComponent(lblTitulo4)
                         .addGap(39, 39, 39)
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                         .addComponent(btnBuscar)
                         .addGap(25, 25, 25))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPanelLayout.createSequentialGroup()
@@ -370,24 +581,31 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLimpiarActionPerformed
-
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDarDeBajaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDarDeBajaActionPerformed
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiarFormulario();
+        txtDni.requestFocus();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (!validarFormulario()) {
+            return;
+        }
+        guardarSocio();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnDarDeBaja;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
