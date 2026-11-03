@@ -5,12 +5,14 @@ public class VistaPrincipal extends javax.swing.JFrame {
     public VistaPrincipal() {
         initComponents();
         
+        setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        escritorio = new EscritorioFondo();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmAdministracion = new javax.swing.JMenu();
         jmiSocios = new javax.swing.JMenuItem();
@@ -22,36 +24,46 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jmiClasesDisp = new javax.swing.JMenuItem();
         jmiHistorialAsist = new javax.swing.JMenuItem();
         jmiEntradasRest = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jmSalir = new javax.swing.JMenu();
+        jmiInformeAsistencias = new javax.swing.JMenuItem();
+        jmiClasesDelDia = new javax.swing.JMenuItem();
+        jmiClasesEntrenadorDisp = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AboriGym - Sistema de Gestion");
 
-        jMenuBar1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
+        escritorio.setLayout(escritorioLayout);
+        escritorioLayout.setHorizontalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 928, Short.MAX_VALUE)
+        );
+        escritorioLayout.setVerticalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 711, Short.MAX_VALUE)
+        );
 
-        jmAdministracion.setText("Administracion");
-        jmAdministracion.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jMenuBar1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
 
-        jmiSocios.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmAdministracion.setText("Administración");
+        jmAdministracion.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+
+        jmiSocios.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiSocios.setText("Socios");
         jmAdministracion.add(jmiSocios);
 
-        jmiEntrenadores.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiEntrenadores.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiEntrenadores.setText("Entrenadores");
         jmAdministracion.add(jmiEntrenadores);
 
-        jmiClases.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiClases.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiClases.setText("Clases");
         jmAdministracion.add(jmiClases);
 
-        jmiPases.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiPases.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiPases.setText("Pases");
         jmAdministracion.add(jmiPases);
 
-        jmiAsistencia.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiAsistencia.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiAsistencia.setText("Asistencias");
         jmiAsistencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,37 +75,38 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jMenuBar1.add(jmAdministracion);
 
         jmConsultas.setText("Consultas");
-        jmConsultas.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmConsultas.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
-        jmiClasesDisp.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiClasesDisp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiClasesDisp.setText("Clases Disponibles");
         jmConsultas.add(jmiClasesDisp);
 
-        jmiHistorialAsist.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiHistorialAsist.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiHistorialAsist.setText("Historial de Asistencias");
         jmConsultas.add(jmiHistorialAsist);
 
-        jmiEntradasRest.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jmiEntradasRest.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiEntradasRest.setText("Entradas Restantes");
         jmConsultas.add(jmiEntradasRest);
 
-        jMenuItem9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jMenuItem9.setText("Informe de Asistencias");
-        jmConsultas.add(jMenuItem9);
+        jmiInformeAsistencias.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        jmiInformeAsistencias.setText("Informe de Asistencias");
+        jmiInformeAsistencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiInformeAsistenciasActionPerformed(evt);
+            }
+        });
+        jmConsultas.add(jmiInformeAsistencias);
 
-        jMenuItem10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jMenuItem10.setText("jMenuItem10");
-        jmConsultas.add(jMenuItem10);
+        jmiClasesDelDia.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        jmiClasesDelDia.setText("Clases del Dia");
+        jmConsultas.add(jmiClasesDelDia);
 
-        jMenuItem11.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jMenuItem11.setText("jMenuItem11");
-        jmConsultas.add(jMenuItem11);
+        jmiClasesEntrenadorDisp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        jmiClasesEntrenadorDisp.setText("Clases Por Entrenador o Disciplina");
+        jmConsultas.add(jmiClasesEntrenadorDisp);
 
         jMenuBar1.add(jmConsultas);
-
-        jmSalir.setText("Salir");
-        jmSalir.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jMenuBar1.add(jmSalir);
 
         setJMenuBar(jMenuBar1);
 
@@ -101,11 +114,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 901, Short.MAX_VALUE)
+            .addComponent(escritorio)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 703, Short.MAX_VALUE)
+            .addComponent(escritorio, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -114,6 +127,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void jmiAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiAsistenciaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jmiAsistenciaActionPerformed
+
+    private void jmiInformeAsistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiInformeAsistenciasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmiInformeAsistenciasActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -148,19 +165,19 @@ public class VistaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane escritorio;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenu jmAdministracion;
     private javax.swing.JMenu jmConsultas;
-    private javax.swing.JMenu jmSalir;
     private javax.swing.JMenuItem jmiAsistencia;
     private javax.swing.JMenuItem jmiClases;
+    private javax.swing.JMenuItem jmiClasesDelDia;
     private javax.swing.JMenuItem jmiClasesDisp;
+    private javax.swing.JMenuItem jmiClasesEntrenadorDisp;
     private javax.swing.JMenuItem jmiEntradasRest;
     private javax.swing.JMenuItem jmiEntrenadores;
     private javax.swing.JMenuItem jmiHistorialAsist;
+    private javax.swing.JMenuItem jmiInformeAsistencias;
     private javax.swing.JMenuItem jmiPases;
     private javax.swing.JMenuItem jmiSocios;
     // End of variables declaration//GEN-END:variables
