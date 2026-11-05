@@ -412,11 +412,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                                 .addComponent(btnGuardar)
                                 .addGap(50, 50, 50)
                                 .addComponent(btnModificar)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(36, 36, 36)
                         .addComponent(btnDarDeBaja)))
                 .addGroup(pnlFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlFormularioLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                        .addGap(54, 54, 54)
                         .addGroup(pnlFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblEdad)
                             .addComponent(lblApellido)
@@ -425,7 +425,7 @@ public class VistaSocios extends javax.swing.JInternalFrame {
                             .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                             .addComponent(spnEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlFormularioLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
+                        .addGap(146, 146, 146)
                         .addComponent(btnNuevo)))
                 .addGap(15, 15, 15))
         );
@@ -489,6 +489,11 @@ public class VistaSocios extends javax.swing.JInternalFrame {
         btnBuscar.setForeground(java.awt.Color.white);
         btnBuscar.setText("Buscar");
         btnBuscar.setFocusPainted(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setBackground(new java.awt.Color(32, 36, 43));
 
@@ -534,20 +539,17 @@ public class VistaSocios extends javax.swing.JInternalFrame {
             .addGroup(pnlPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(pnlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlPanelLayout.createSequentialGroup()
-                        .addComponent(lblTitulo3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblTitulo3)
                     .addGroup(pnlPanelLayout.createSequentialGroup()
                         .addComponent(lblTitulo4)
                         .addGap(39, 39, 39)
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                        .addComponent(btnBuscar)
-                        .addGap(25, 25, 25))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPanelLayout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(btnBuscar)))
+                .addContainerGap(66, Short.MAX_VALUE))
+            .addGroup(pnlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addComponent(jScrollPane1))
         );
         pnlPanelLayout.setVerticalGroup(
             pnlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -593,11 +595,22 @@ public class VistaSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDarDeBajaActionPerformed
-        // TODO add your handling code here:
+        if (socio == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un socio de la tabla.");
+            return;
+        }
+
+        int id = socio.getIdSocio();
+        System.out.println(id);
+        socioData.bajaSocio(id);
+
+        cargarTabla();
+        limpiarFormulario();
     }//GEN-LAST:event_btnDarDeBajaActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         limpiarFormulario();
+        jTable1.clearSelection();
         txtDni.requestFocus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -609,12 +622,79 @@ public class VistaSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        
+        if (socio == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un socio de la tabla.");
+            return;
+        }
+        if (!validarFormulario()) {
+            return;
+        }
+
+        socio.setDni(txtDni.getText().trim());
+        socio.setNombre(txtNombre.getText().trim());
+        socio.setApellido(txtApellido.getText().trim());
+        socio.setEdad((int) spnEdad.getValue());
+        socio.setCorreo(txtCorreoElectronico.getText().trim());
+        socio.setTelefono(txtTelefono.getText().trim());
+
+        socioData.modificarSocio(socio);
+
+        cargarTabla();
+        limpiarFormulario();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+
+        int fila = jTable1.getSelectedRow();
+
+        if (fila != -1) {
+
+            String dni = jTable1.getValueAt(fila, 0).toString();
+
+            socio = socioData.buscarSocioPorDni(dni);
+
+            if (socio != null) {
+                txtDni.setText(socio.getDni());
+                txtNombre.setText(socio.getNombre());
+                txtApellido.setText(socio.getApellido());
+                spnEdad.setValue(socio.getEdad());
+                txtTelefono.setText(socio.getTelefono());
+                txtCorreoElectronico.setText(socio.getCorreo());
+            }
+        }
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+        String criterio = txtBuscar.getText().trim().toLowerCase();
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        List<Socio> lista = socioData.listarSocio();
+
+        for (Socio s : lista) {
+            if (criterio.isEmpty()
+                    || s.getDni().toLowerCase().contains(criterio)
+                    || s.getApellido().toLowerCase().contains(criterio)) {
+
+                modelo.addRow(new Object[]{
+                    s.getDni(), s.getNombre(), s.getApellido(),
+                    s.getEdad(), s.getTelefono(), s.getCorreo()
+                });
+            }
+        }
+
+        // Si la tabla no recibió ningún registro, se muestra la advertencia
+        if (modelo.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró ningún socio que coincida con '" + criterio + "'.",
+                    "Búsqueda sin resultados",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
