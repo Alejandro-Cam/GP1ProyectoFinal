@@ -3,34 +3,159 @@ package Vistas;
 import Entidades.Entrenador;
 import Persistencia.EntrenadorData;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class VistaEntrenadores extends javax.swing.JInternalFrame {
-    
+
     private EntrenadorData entrenadorData;
     private Entrenador entrenador;
-    
+
     public VistaEntrenadores() {
         initComponents();
         entrenadorData = new EntrenadorData();
-        
+
+        configurarTabla();
+        cargarTabla();
     }
-    
+
     //configurar tabla
     private void configurarTabla() {
-        
+        jTable1.getTableHeader().setBackground(
+                new java.awt.Color(40, 167, 69)
+        );
+
+        jTable1.getTableHeader().setForeground(
+                java.awt.Color.darkGray
+        );
+
+        jTable1.getTableHeader().setFont(
+                new java.awt.Font("Dialog", java.awt.Font.BOLD, 15)
+        );
+
+        jTable1.getTableHeader().setPreferredSize(
+                new java.awt.Dimension(0, 32)
+        );
     }
-    
+
     private void cargarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setRowCount(0);
-        
+
         List<Entrenador> lista = entrenadorData.listarEntrenadores();
-        
-        
-        
+
+        for (Entrenador ent : lista) {
+            modelo.addRow(new Object[]{
+                ent.getDni(), ent.getApellido(), ent.getNombre(),
+                ent.getEspecialidad(), ent.isEstado()
+            });
+        }
     }
-    
+
+    //VALIDACIONES
+    private boolean validarFormulario() {
+        String dni = txtDni.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String especialidad = txtEspecialidad.getText().trim();
+
+        //DNI
+        if (dni.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el numero de DNI");
+            txtDni.requestFocus();
+            return false;
+        } else {
+            if (!dni.matches("[0-9]+")) {
+                if (!dni.contains(".")) {
+                    JOptionPane.showMessageDialog(this, "Ingrese el DNI sin puntos.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El DNI solo debe contener números.");
+                }
+                txtDni.selectAll();
+                txtDni.requestFocus();
+                return false;
+            } else {
+                if (dni.length() < 7 || dni.length() > 8) {
+                    JOptionPane.showMessageDialog(this, "El DNI debe contener entre 7 y 8 números.");
+                    txtDni.selectAll();
+                    txtDni.requestFocus();
+                    return false;
+                }
+            }
+        }
+
+        //APELLIDO
+        if (apellido.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El apellido no puede estar vacío.");
+            txtApellido.requestFocus();
+            return false;
+        } else {
+            //Validar longitud mínima
+            if (apellido.length() < 2) {
+                JOptionPane.showMessageDialog(this, "El apellido debe tener al menos 2 letras.");
+                txtApellido.selectAll();
+                txtApellido.requestFocus();
+                return false;
+            } else {
+                //Validar solo letras, acentos y espacios (excluye números y símbolos)
+                if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+                    // Anidado para dar un mensaje específico si metió números
+                    if (apellido.matches(".*\\d.*")) {
+                        JOptionPane.showMessageDialog(this, "El apellido no puede contener números.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El apellido no puede contener símbolos ni caracteres especiales.");
+                    }
+                    txtApellido.selectAll();
+                    txtApellido.requestFocus();
+                    return false;
+                }
+            }
+        }
+
+        //NOMBRE    
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
+            txtNombre.requestFocus();
+            return false;
+        } else {
+            //Validar longitud mínima
+            if (nombre.length() < 2) {
+                JOptionPane.showMessageDialog(this, "El nombre debe tener al menos 2 letras.");
+                txtNombre.selectAll();
+                txtNombre.requestFocus();
+                return false;
+            } else {
+                //Validar solo letras, acentos y espacios (excluye números y símbolos)
+                if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+                    // Anidado para dar un mensaje específico si metió números
+                    if (nombre.matches(".*\\d.*")) {
+                        JOptionPane.showMessageDialog(this, "El nombre no puede contener números.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El nombre no puede contener símbolos ni caracteres especiales.");
+                    }
+                    txtNombre.selectAll();
+                    txtNombre.requestFocus();
+                    return false;
+                }
+            }
+        }
+        
+        //ESPECIALIDAD
+        if(especialidad.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar la especialidad del entrenador");
+            txtEspecialidad.requestFocus();
+            return false;
+        }else {
+            if(especialidad.length() < 2) {
+                JOptionPane.showMessageDialog(this, "La especialidad debe tener al menos 2 letras");
+                txtEspecialidad.requestFocus();
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -163,9 +288,9 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblTitulo2)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDni)
-                    .addComponent(lblNombre))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblDni))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
