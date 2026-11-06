@@ -35,7 +35,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 957, Short.MAX_VALUE)
+            .addGap(0, 1044, Short.MAX_VALUE)
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -58,6 +58,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         jmiEntrenadores.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jmiEntrenadores.setText("Entrenadores");
+        jmiEntrenadores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiEntrenadoresActionPerformed(evt);
+            }
+        });
         jmAdministracion.add(jmiEntrenadores);
 
         jmiClases.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -147,6 +152,17 @@ public class VistaPrincipal extends javax.swing.JFrame {
         escritorio.add(vs);
         escritorio.moveToFront(vs); //lleva al frenta la ventana
     }//GEN-LAST:event_jmiSociosActionPerformed
+
+    private void jmiEntrenadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiEntrenadoresActionPerformed
+        escritorio.removeAll();
+        escritorio.repaint();
+        
+        VistaEntrenadores ve = new VistaEntrenadores();
+        ve.setVisible(true);
+        
+        escritorio.add(ve);
+        escritorio.moveToFront(ve);
+    }//GEN-LAST:event_jmiEntrenadoresActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
