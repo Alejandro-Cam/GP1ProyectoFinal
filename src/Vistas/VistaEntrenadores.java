@@ -42,12 +42,17 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setRowCount(0);
 
-        List<Entrenador> lista = entrenadorData.listarEntrenadores();
+        String filtro = cmbEstado.getSelectedItem().toString();
+
+        List<Entrenador> lista = entrenadorData.listarEntrenadoresPorEstado(filtro);
 
         for (Entrenador ent : lista) {
             modelo.addRow(new Object[]{
-                ent.getDni(), ent.getApellido(), ent.getNombre(),
-                ent.getEspecialidad(), ent.isEstado()
+                ent.getDni(),
+                ent.getApellido(),
+                ent.getNombre(),
+                ent.getEspecialidad(),
+                ent.isEstado() ? "Activo" : "Inactivo"
             });
         }
     }
@@ -139,21 +144,54 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+
         //ESPECIALIDAD
-        if(especialidad.isEmpty()) {
+        if (especialidad.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe ingresar la especialidad del entrenador");
             txtEspecialidad.requestFocus();
             return false;
-        }else {
-            if(especialidad.length() < 2) {
+        } else {
+            if (especialidad.length() < 2) {
                 JOptionPane.showMessageDialog(this, "La especialidad debe tener al menos 2 letras");
                 txtEspecialidad.requestFocus();
                 return false;
             }
         }
-        
+
         return true;
+    }
+
+    //METODO BOTON NUEVO
+    private void limpiarFormulario() {
+        txtDni.setText("");
+        txtApellido.setText("");
+        txtNombre.setText("");
+        txtEspecialidad.setText("");
+
+        entrenador = null;
+    }
+
+    //METODO GUARDAR
+    private void guardarEntrenador() {
+        //datos del formulario
+        String dni = txtDni.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String especialidad = txtEspecialidad.getText().trim();
+
+        //creo entrenador
+        Entrenador e = new Entrenador();
+        e.setDni(dni);
+        e.setNombre(nombre);
+        e.setApellido(apellido);
+        e.setEspecialidad(especialidad);
+        e.setEstado(true);
+
+        //guardar en BD
+        entrenadorData.guardarEntrenador(e);
+
+        cargarTabla();
+        limpiarFormulario();
     }
 
     @SuppressWarnings("unchecked")
@@ -182,6 +220,7 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
         btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        cmbEstado = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setIconifiable(true);
@@ -205,6 +244,8 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         txtDni.setBackground(new java.awt.Color(52, 58, 68));
         txtDni.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtDni.setForeground(java.awt.Color.white);
+        txtDni.setCaretColor(new java.awt.Color(255, 255, 255));
         txtDni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDniActionPerformed(evt);
@@ -217,6 +258,8 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         txtNombre.setBackground(new java.awt.Color(52, 58, 68));
         txtNombre.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtNombre.setForeground(java.awt.Color.white);
+        txtNombre.setCaretColor(new java.awt.Color(255, 255, 255));
 
         lblApellido.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblApellido.setForeground(new java.awt.Color(255, 255, 255));
@@ -224,6 +267,8 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         txtApellido.setBackground(new java.awt.Color(52, 58, 68));
         txtApellido.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtApellido.setForeground(java.awt.Color.white);
+        txtApellido.setCaretColor(new java.awt.Color(255, 255, 255));
 
         lblEspecialidad.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblEspecialidad.setForeground(new java.awt.Color(255, 255, 255));
@@ -231,6 +276,8 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         txtEspecialidad.setBackground(new java.awt.Color(52, 58, 68));
         txtEspecialidad.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtEspecialidad.setForeground(java.awt.Color.white);
+        txtEspecialidad.setCaretColor(new java.awt.Color(255, 255, 255));
 
         btnNuevo.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -242,12 +289,27 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         btnGuardar.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnDarDeBaja.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnDarDeBaja.setText("Dar de Baja");
+        btnDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDarDeBajaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -278,7 +340,7 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
                 .addComponent(btnModificar)
                 .addGap(61, 61, 61)
                 .addComponent(btnDarDeBaja)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(316, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,11 +384,14 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
         lblTitulo3.setForeground(new java.awt.Color(255, 255, 255));
         lblTitulo3.setText("Entrenadores Registrados");
 
-        lblTitulo4.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblTitulo4.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
+        lblTitulo4.setForeground(new java.awt.Color(40, 167, 69));
         lblTitulo4.setText("Buscar Por DNI o Apellido");
 
         txtBuscar.setBackground(new java.awt.Color(52, 58, 68));
         txtBuscar.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtBuscar.setForeground(java.awt.Color.white);
+        txtBuscar.setCaretColor(new java.awt.Color(255, 255, 255));
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarActionPerformed(evt);
@@ -335,10 +400,17 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
 
         btnBuscar.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setBackground(new java.awt.Color(32, 36, 43));
 
+        jTable1.setBackground(new java.awt.Color(52, 58, 68));
         jTable1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTable1.setForeground(java.awt.Color.white);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -358,6 +430,15 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setGridColor(new java.awt.Color(89, 98, 115));
+        jTable1.setRowHeight(24);
+        jTable1.setSelectionBackground(new java.awt.Color(40, 120, 200));
+        jTable1.setSelectionForeground(java.awt.Color.white);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -366,6 +447,14 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
             jTable1.getColumnModel().getColumn(3).setResizable(false);
             jTable1.getColumnModel().getColumn(4).setResizable(false);
         }
+
+        cmbEstado.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Activos", "Inactivos" }));
+        cmbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -382,25 +471,29 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
                             .addComponent(lblTitulo3)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(lblTitulo4)
-                                .addGap(99, 99, 99)
-                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
-                        .addComponent(btnBuscar)
-                        .addGap(99, 99, 99))))
+                                .addGap(57, 57, 57)
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)
+                                .addComponent(btnBuscar)
+                                .addGap(28, 28, 28)
+                                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(20, 20, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBuscar)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnBuscar)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(lblTitulo3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTitulo4))
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblTitulo4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -427,12 +520,133 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtDniActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+        limpiarFormulario();
+
+        jTable1.clearSelection();
+        txtDni.requestFocus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (!validarFormulario()) {
+            return;
+        }
+
+        guardarEntrenador();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDarDeBajaActionPerformed
+        if (entrenador == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un entrenador.");
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                entrenador.isEstado()
+                ? "¿Desea dar de baja a este entrenador?"
+                : "¿Desea dar de alta a este entrenador?",
+                "Confirmar operación",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+
+            if (entrenador.isEstado()) {
+                entrenadorData.bajaEntrenador(entrenador.getIdEntrenador());
+            } else {
+                entrenadorData.altaEntrenador(entrenador.getIdEntrenador());
+            }
+
+            cargarTabla();
+            limpiarFormulario();
+            btnDarDeBaja.setText("Dar de baja");
+        }
+    }//GEN-LAST:event_btnDarDeBajaActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int fila = jTable1.getSelectedRow();
+
+        if (fila != -1) {
+            String dni = jTable1.getValueAt(fila, 0).toString();
+
+            entrenador = entrenadorData.buscarPorDni(dni);
+
+            if (entrenador != null) {
+                txtDni.setText(entrenador.getDni());
+                txtApellido.setText(entrenador.getApellido());
+                txtNombre.setText(entrenador.getNombre());
+                txtEspecialidad.setText(entrenador.getEspecialidad());
+            }
+            if (entrenador.isEstado()) {
+                btnDarDeBaja.setText("Dar de baja");
+            } else {
+                btnDarDeBaja.setText("Dar de alta");
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        if (entrenador == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un entrenador de la tabla");
+            return;
+        }
+        if (!validarFormulario()) {
+            return;
+        }
+
+        entrenador.setDni(txtDni.getText().trim());
+        entrenador.setNombre(txtNombre.getText().trim());
+        entrenador.setApellido(txtApellido.getText().trim());
+        entrenador.setEspecialidad(txtEspecialidad.getText().trim());
+
+        entrenadorData.modificarEntrenador(entrenador);
+
+        cargarTabla();
+        limpiarFormulario();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String criterio = txtBuscar.getText().trim().toLowerCase();
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        // Respeta el filtro del ComboBox ("Todos", "Activos", "Inactivos")
+        String filtro = cmbEstado.getSelectedItem().toString();
+        List<Entrenador> lista = entrenadorData.listarEntrenadoresPorEstado(filtro);
+
+        for (Entrenador e : lista) {
+            if (criterio.isEmpty()
+                    || e.getDni().toLowerCase().contains(criterio)
+                    || e.getApellido().toLowerCase().contains(criterio)) {
+                modelo.addRow(new Object[]{
+                    e.getDni(),
+                    e.getApellido(),
+                    e.getNombre(),
+                    e.getEspecialidad(),
+                    e.isEstado() ? "Activo" : "Inactivo" // Formato de texto uniforme
+                });
+            }
+        }
+
+        if (modelo.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró ningún entrenador que coincida con '" + criterio + "'.",
+                    "Búsqueda sin resultados",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
+        cargarTabla();
+        limpiarFormulario();
+    }//GEN-LAST:event_cmbEstadoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -441,6 +655,7 @@ public class VistaEntrenadores extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

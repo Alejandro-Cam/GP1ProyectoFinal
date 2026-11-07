@@ -73,6 +73,32 @@ public class EntrenadorData {
         return e;
     }
 
+    //Buscar entrenador activo por DNI
+    public Entrenador buscarPorDni(String dni) {
+        Entrenador e = null;
+        String sql = "SELECT * FROM entrenadores WHERE DNI = ?";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setString(1, dni);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                e = new Entrenador();
+                e.setIdEntrenador(rs.getInt("ID_Entrenador"));
+                e.setDni(rs.getString("DNI"));
+                e.setNombre(rs.getString("Nombre"));
+                e.setApellido(rs.getString("Apellido"));
+                e.setEspecialidad(rs.getString("Especialidad"));
+                e.setEstado(rs.getBoolean("Estado"));
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al buscar entrenador por DNI: " + ex.getMessage());
+        }
+        return e;
+    }
+
     //LISTA DE ENTRENADORES ACTIVOS 
     public List<Entrenador> listarEntrenadores() {
         List<Entrenador> entrenadores = new ArrayList<>();
@@ -98,6 +124,50 @@ public class EntrenadorData {
             JOptionPane.showMessageDialog(null, "Error al listar entrenadores: " + ex.getMessage());
         }
         return entrenadores;
+    }
+
+    //metodo para cargar la tabla
+    public List<Entrenador> listarEntrenadoresPorEstado(String filtro) {
+        List<Entrenador> lista = new ArrayList<>();
+
+        String sql;
+
+        if (filtro.equals("Todos")) {
+            sql = "SELECT * FROM entrenadores";
+        } else {
+            sql = "SELECT * FROM entrenadores WHERE Estado = ?";
+        }
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+
+            if (!filtro.equals("Todos")) {
+                ps.setBoolean(1, filtro.equals("Activos"));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Entrenador ent = new Entrenador(
+                        rs.getInt("ID_Entrenador"),
+                        rs.getString("DNI"),
+                        rs.getString("Nombre"),
+                        rs.getString("Apellido"),
+                        rs.getString("Especialidad"),
+                        rs.getBoolean("Estado")
+                );
+
+                lista.add(ent);
+            }
+
+            ps.close();
+            rs.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al listar entrenadores: " + ex.getMessage());
+        }
+
+        return lista;
     }
 
     //MODIFICAR 
@@ -135,12 +205,12 @@ public class EntrenadorData {
             if (filas > 0) {
                 JOptionPane.showMessageDialog(null, "Entrenador dado de baja correctamente.");
             }
-
+            ps.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al dar de baja al entrenador: " + ex.getMessage());
         }
     }
-    
+
     //Alta logica
     public void altaEntrenador(int id) {
         String sql = "UPDATE entrenadores SET Estado = 1 WHERE ID_Entrenador = ?";
@@ -153,9 +223,10 @@ public class EntrenadorData {
             if (filas > 0) {
                 JOptionPane.showMessageDialog(null, "Entrenador dado de alta correctamente.");
             }
-
+            ps.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al dar de alta al entrenador: " + ex.getMessage());
         }
     }
+
 }
